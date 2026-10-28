@@ -1,0 +1,15 @@
+[Unit]
+Description=My Discord Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=user
+WorkingDirectory=/home/user/mybot
+ExecStart=/home/user/mybot/.venv/bin/python bot.py
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

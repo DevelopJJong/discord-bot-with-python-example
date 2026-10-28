@@ -1,0 +1,4 @@
+discord.py==2.7.1
+python-dotenv
+aiohttp
+aiosqlite==0.22.1
