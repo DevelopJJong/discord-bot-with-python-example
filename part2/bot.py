@@ -282,7 +282,130 @@ async def quiz(interaction: discord.Interaction):
     await interaction.response.send_message("패킷을 빠짐없이, 순서대로 전달하는 프로토콜은?", view=QuizView())
 
 
-# 8장
+# 8장 Components V2 — 따라 만들기: /카드
+class CardButtons(discord.ui.ActionRow):
+    @discord.ui.button(label="인사하기", style=discord.ButtonStyle.primary, emoji="👋")
+    async def hello(self, interaction: discord.Interaction, button: discord.ui.Button):
+        member = self.view.member
+        text = f"{interaction.user.mention}님이 {member.mention}님에게 인사했어요!"
+        await interaction.response.send_message(text)
+
+
+class ProfileCard(discord.ui.LayoutView):
+    def __init__(self, member: discord.Member):
+        super().__init__(timeout=300)
+        self.member = member
+        joined = discord.utils.format_dt(member.joined_at, "D")
+        header = discord.ui.Section(
+            f"## {member.display_name}",
+            f"{member.mention}님의 프로필 카드예요",
+            accessory=discord.ui.Thumbnail(member.display_avatar.url),
+        )
+        info = discord.ui.TextDisplay(
+            f"**서버에 들어온 날** {joined}\n"
+            f"**가진 역할** {len(member.roles) - 1}개"
+        )
+        card = discord.ui.Container(
+            header, discord.ui.Separator(), info, CardButtons(),
+            accent_colour=0x5B63E6,
+        )
+        self.add_item(card)
+
+
+@bot.tree.command(name="카드", description="멤버의 프로필 카드를 보여 줘요")
+@app_commands.describe(member="카드를 볼 멤버 (비우면 나)")
+@app_commands.rename(member="멤버")
+async def card(interaction: discord.Interaction, member: discord.Member | None = None):
+    member = member or interaction.user
+    await interaction.response.send_message(view=ProfileCard(member))
+
+
+# 8장 사진 넣기: MediaGallery (사용 예: view, file = photo_view("photo.png") 후 send_message(view=view, files=[file]))
+def photo_view(path: str):
+    file = discord.File(path, filename="photo.png")
+    view = discord.ui.LayoutView()
+    view.add_item(discord.ui.Container(
+        discord.ui.TextDisplay("### 오늘의 사진"),
+        discord.ui.MediaGallery(discord.MediaGalleryItem(file, description="오늘 찍은 사진")),
+    ))
+    return view, file
+
+
+# 8장 미션 7 해답: /공지카드
+class NoticeButtons(discord.ui.ActionRow):
+    @discord.ui.button(label="확인했어요", style=discord.ButtonStyle.success, emoji="✅")
+    async def ack(self, interaction: discord.Interaction, button: discord.ui.Button):
+        notice = self.view
+        if interaction.user.id in notice.readers:
+            await interaction.response.send_message("이미 확인했어요!", ephemeral=True)
+            return
+        notice.readers.add(interaction.user.id)
+        notice.status.content = f"✅ {len(notice.readers)}명이 확인했어요"
+        await interaction.response.edit_message(view=notice)
+
+
+class NoticeCard(discord.ui.LayoutView):
+    def __init__(self, title: str, body: str, image_url: str | None = None):
+        super().__init__(timeout=3600)
+        self.readers = set()
+        self.status = discord.ui.TextDisplay("아직 아무도 확인하지 않았어요")
+        items = [
+            discord.ui.TextDisplay(f"## 📢 {title}"),
+            discord.ui.Separator(),
+            discord.ui.TextDisplay(body),
+        ]
+        if image_url:
+            items.append(discord.ui.MediaGallery(discord.MediaGalleryItem(image_url)))
+        items += [discord.ui.Separator(), self.status, NoticeButtons()]
+        self.add_item(discord.ui.Container(*items, accent_colour=0xFDCA51))
+
+
+@bot.tree.command(name="공지카드", description="확인 버튼이 달린 공지를 올려요")
+@app_commands.describe(
+    title="공지 제목", body="공지 내용", image="사진 주소 (https://로 시작, 비워도 됨)"
+)
+@app_commands.rename(title="제목", body="내용", image="사진주소")
+async def notice(interaction: discord.Interaction, title: str, body: str,
+                 image: str | None = None):
+    if image and not image.startswith("https://"):
+        await interaction.response.send_message(
+            "사진 주소는 https:// 로 시작해야 해요.", ephemeral=True
+        )
+        return
+    await interaction.response.send_message(view=NoticeCard(title, body, image))
+
+
+# 8장 새로워진 모달: Label과 선택 메뉴
+class FeedbackModal(discord.ui.Modal, title="봇 의견 보내기"):
+    rating = discord.ui.Label(
+        text="봇이 얼마나 마음에 드나요?",
+        component=discord.ui.Select(options=[
+            discord.SelectOption(label="아주 좋아요", value="5", emoji="😍"),
+            discord.SelectOption(label="괜찮아요", value="3", emoji="🙂"),
+            discord.SelectOption(label="아쉬워요", value="1", emoji="😢"),
+        ]),
+    )
+    comment = discord.ui.Label(
+        text="하고 싶은 말",
+        component=discord.ui.TextInput(
+            style=discord.TextStyle.paragraph, required=False, max_length=300,
+        ),
+    )
+
+    async def on_submit(self, interaction: discord.Interaction):
+        score = self.rating.component.values[0]
+        text = self.comment.component.value or "(없음)"
+        await interaction.response.send_message(
+            f"고마워요! 점수 {score}점, 의견: {text}", ephemeral=True
+        )
+
+
+@bot.tree.command(name="의견", description="봇에 대한 의견을 보내요")
+async def feedback(interaction: discord.Interaction):
+    await interaction.response.send_modal(FeedbackModal())
+
+
+# 9장
 @bot.tree.command(name="청소", description="최근 메시지를 지워요")
 @app_commands.describe(amount="지울 메시지 수 (1~50)")
 @app_commands.rename(amount="개수")

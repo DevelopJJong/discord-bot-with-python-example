@@ -1,5 +1,5 @@
 # 기초 다지기 4장 예제
-ranking = ["하늘", "바다", "구름"]
+ranking = ["시온", "바다", "구름"]
 for i, name in enumerate(ranking, start=1):    # 번호와 값을 함께
     print(f"{i}위 {name}")
 

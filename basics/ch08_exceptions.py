@@ -8,7 +8,7 @@ def to_number(text: str):
 
 print(to_number("42"), to_number("사십이"))
 
-scores = {"하늘": 12}
+scores = {"시온": 12}
 try:
     print(scores["바다"])
 except KeyError as error:

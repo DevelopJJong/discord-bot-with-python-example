@@ -1,5 +1,5 @@
 # 기초 다지기 2장 예제
-name = "하늘"
+name = "시온"
 points = 12
 temp = 17.6666
 print(f"{name}님, 출석 완료! 지금 {points}포인트예요.")

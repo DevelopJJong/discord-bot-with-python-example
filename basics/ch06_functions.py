@@ -13,5 +13,5 @@ def greet(name: str, emoji: str = "👋") -> str:
 
 
 print(outfit(30), outfit(21.5), outfit(5))
-print(greet("하늘"))
+print(greet("시온"))
 print(greet("바다", emoji="🎉"))      # 키워드 인자: 이름을 붙여 넘기기
