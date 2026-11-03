@@ -1,6 +1,6 @@
 # 나만의 디스코드 봇 만들기 (with Python) — 예제 코드
 
-C&AI Institute가 쓴 책 《나만의 디스코드 봇 만들기 (with Python)》의 예제 코드 저장소입니다.
+DevelopJJong이 쓰고 조경민이 검수한 책 《나만의 디스코드 봇 만들기 (with Python)》(썬클래스 SunClass)의 예제 코드 저장소입니다.
 책의 따라 만들기 코드와 요구사항 미션 해답을 부별로 모았습니다.
 
 ## 폴더 구성
@@ -39,7 +39,7 @@ C&AI Institute가 쓴 책 《나만의 디스코드 봇 만들기 (with Python)�
 
 - 코드는 discord.py 2.7.1, Python 3.10 이상에서 확인했습니다. 라이브러리와 외부 API가 바뀌면 동작이 달라질 수 있습니다.
 - Discord는 Discord Inc.의 등록 상표이며, 이 저장소와 책은 Discord Inc.의 공식 후원이나 승인을 받지 않은 독립 출판물입니다.
-- 문의: C&AI Institute (portal.cnai-ins.com)
+- 문의·오탈자 제보: 이 저장소의 Issues
 
 ## 라이선스
 
