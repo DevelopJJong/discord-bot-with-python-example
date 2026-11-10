@@ -23,6 +23,7 @@ class Fun(commands.Cog):
                               description=art["artistDisplayName"] or "작가 미상")
         if art["primaryImageSmall"]:
             embed.set_image(url=art["primaryImageSmall"])
+        embed.set_footer(text=f"No.{number} · 출처: The Metropolitan Museum of Art (CC0)")
         await interaction.followup.send(embed=embed)
 
 

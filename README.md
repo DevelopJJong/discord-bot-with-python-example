@@ -10,7 +10,7 @@ DevelopJJong이 쓰고 조경민이 검수한 책 《나만의 디스코드 봇 
 | basics/ | PART 0 준비하기 — 파이썬 핵심 문법 예제 (파일 이름의 번호는 장 번호, ch02~ch10) |
 | part2/ | 2부 discord.py로 기능 만들기 — 완성 bot.py (본문 + 미션 해답, 8장 Components V2 포함) |
 | part3/ | 3부 외부 API와 데이터 저장 — 1~8장 완성 bot.py (본문 + 미션 해답) |
-| part3_cog/ | 3부 9장 — Cog로 나눈 구조 (bot.py + cogs/) |
+| part3_cog/ | 3부 9장 — Cog로 나눈 구조 (bot.py + cogs/fun.py, 미션 8 해답 cogs/info.py) |
 | part4/ | 4부 24시간 봇 운영하기 — 운영용 bot.py, cogs/ops.py, systemd 서비스 파일, update.sh |
 
 ## 실행 방법

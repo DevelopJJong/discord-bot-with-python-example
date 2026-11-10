@@ -19,6 +19,11 @@ class MyBot(commands.Bot):
     async def setup_hook(self):
         self.session = aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=10))
         self.db = await aiosqlite.connect(DB_FILE)
+        await self.db.execute(
+            "CREATE TABLE IF NOT EXISTS attendance ("
+            " user_id INTEGER PRIMARY KEY, name TEXT,"
+            " points INTEGER NOT NULL DEFAULT 0, last_date TEXT)")
+        await self.db.commit()
         for name in EXTENSIONS:
             await self.load_extension(name)
         guild = discord.Object(id=GUILD_ID)
